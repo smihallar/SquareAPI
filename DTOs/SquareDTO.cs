@@ -1,12 +1,21 @@
 ﻿namespace SquareAPI.DTOs
 {
     /// <summary>
-    /// A Data Transfer Object (DTO) representing a square in a grid.
+    /// Represents the data returned for a square.
     /// </summary>
-    public class SquareDTO
+    public class SquareDto
     {
-        public int X { get; set; } // Horizontal position of the square in the grid
-        public int Y { get; set; } // Vertical position of the square in the grid
-        public string Color { get; set; } // Color of the square
+        /// <summary>
+        /// Horizontal grid coordinate of the square.
+        /// </summary>
+        public int X { get; set; }
+        /// <summary>
+        /// Vertical grid coordinate of the square.
+        /// </summary>
+        public int Y { get; set; }
+        /// <summary>
+        /// Color of the square in hexadecimal format (e.g., #FF5733).
+        /// </summary>
+        public string Color { get; set; }
     }
 }

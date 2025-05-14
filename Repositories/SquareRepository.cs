@@ -3,13 +3,12 @@ using System.Text.Json;
 
 namespace SquareAPI.Repositories
 {
+    /// <inheritdoc/>
     public class SquareRepository : ISquareRepository
     {
         private const string FilePath = "squares.json";
 
-        /// <summary>
-        /// Retrieves all squares if they exist in storage.
-        /// </summary>
+        /// <inheritdoc/>
         public async Task<List<Square>> GetAllSquaresAsync()
         {
             if (!File.Exists(FilePath))
@@ -19,9 +18,7 @@ namespace SquareAPI.Repositories
             return JsonSerializer.Deserialize<List<Square>>(json) ?? new List<Square>();
         }
 
-        /// <summary>
-        /// Adds a new square to the system and ensures it is stored persistently.
-        /// </summary>
+        /// <inheritdoc/>
         public async Task AddSquareAsync(Square square)
         {
             var squares = await GetAllSquaresAsync();
@@ -29,19 +26,35 @@ namespace SquareAPI.Repositories
             await SaveSquaresAsync(squares);
         }
 
-        /// <summary>
-        /// Resets squares by clearing the existing squares and creating a new empty list. 
-        /// </summary>
+        /// <inheritdoc/>
         public async Task ResetSquaresAsync()
         {
             await SaveSquaresAsync(new List<Square>());
         }
 
-        /// <summary>
-        /// Saves new squares to the file system.
-        /// </summary>
-        private async Task SaveSquaresAsync(List<Square> squares)
+        /// <inheritdoc/>
+        public async Task SaveSquaresAsync(List<Square> squares)
         {
+            var json = JsonSerializer.Serialize(squares, new JsonSerializerOptions { WriteIndented = true });
+            await File.WriteAllTextAsync(FilePath, json);
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteSquareByPositionAsync(int x, int y)
+        {
+            var squares = await GetAllSquaresAsync();
+
+            var squareToRemove = squares.FirstOrDefault(s => s.X == x && s.Y == y);
+
+            if (squareToRemove != null)
+            {
+                squares.Remove(squareToRemove);
+                await SaveSquaresAsync(squares);
+            }
+            else
+            {
+                Console.WriteLine($"Square with position ({x}, {y}) not found.");
+            }
         }
     }
 }
