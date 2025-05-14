@@ -14,46 +14,81 @@ namespace SquareAPI.Repositories
             if (!File.Exists(FilePath))
                 return new List<Square>();
 
-            var json = await File.ReadAllTextAsync(FilePath);
-            return JsonSerializer.Deserialize<List<Square>>(json) ?? new List<Square>();
+            try
+            {
+                var json = await File.ReadAllTextAsync(FilePath);
+                return JsonSerializer.Deserialize<List<Square>>(json) ?? new List<Square>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading or deserializing file: {ex.Message}");
+                return new List<Square>();
+            }
         }
 
         /// <inheritdoc/>
         public async Task AddSquareAsync(Square square)
         {
-            var squares = await GetAllSquaresAsync();
-            squares.Add(square);
-            await SaveSquaresAsync(squares);
+            try
+            {
+                var squares = await GetAllSquaresAsync();
+                squares.Add(square);
+                await SaveSquaresAsync(squares);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding square: {ex.Message}");
+            }
         }
 
         /// <inheritdoc/>
         public async Task ResetSquaresAsync()
         {
-            await SaveSquaresAsync(new List<Square>());
+            try
+            {
+                await SaveSquaresAsync(new List<Square>());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resetting squares: {ex.Message}");
+            }
         }
 
         /// <inheritdoc/>
         public async Task SaveSquaresAsync(List<Square> squares)
         {
-            var json = JsonSerializer.Serialize(squares, new JsonSerializerOptions { WriteIndented = true });
-            await File.WriteAllTextAsync(FilePath, json);
+            try
+            {
+                var json = JsonSerializer.Serialize(squares, new JsonSerializerOptions { WriteIndented = true });
+                await File.WriteAllTextAsync(FilePath, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing to file: {ex.Message}");
+            }
         }
 
         /// <inheritdoc/>
         public async Task DeleteSquareByPositionAsync(int x, int y)
         {
-            var squares = await GetAllSquaresAsync();
-
-            var squareToRemove = squares.FirstOrDefault(s => s.X == x && s.Y == y);
-
-            if (squareToRemove != null)
+            try
             {
-                squares.Remove(squareToRemove);
-                await SaveSquaresAsync(squares);
+                var squares = await GetAllSquaresAsync();
+                var squareToRemove = squares.FirstOrDefault(s => s.X == x && s.Y == y);
+
+                if (squareToRemove != null)
+                {
+                    squares.Remove(squareToRemove);
+                    await SaveSquaresAsync(squares);
+                }
+                else
+                {
+                    Console.WriteLine($"Square with position ({x}, {y}) not found.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"Square with position ({x}, {y}) not found.");
+                Console.WriteLine($"Error deleting square at ({x}, {y}): {ex.Message}");
             }
         }
     }

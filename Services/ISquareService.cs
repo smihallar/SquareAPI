@@ -3,6 +3,9 @@ using SquareAPI.DTOs.Responses;
 
 namespace SquareAPI.Services
 {
+    /// <summary>
+    /// Interface for the Square service which defines methods for managing squares.
+    /// </summary>
     public interface ISquareService
     {
         /// <summary>
@@ -15,7 +18,7 @@ namespace SquareAPI.Services
         /// - A success flag
         /// - Any errors and a custom message
         /// </returns>
-        public Task<Response<List<SquareDto>>> GetAllSquaresAsync();
+        Task<Response<List<SquareDto>>> GetAllSquaresAsync();
 
         /// <summary>
         /// Asynchronously adds a new square to the list.
@@ -26,7 +29,7 @@ namespace SquareAPI.Services
         /// - A success flag
         /// - Any errors and a custom message
         /// </returns>
-        public Task<Response> AddSquareAsync();
+        Task<Response> AddSquareAsync();
 
         /// <summary>
         /// Asynchronously resets the list of squares by clearing existing entries.
@@ -37,7 +40,7 @@ namespace SquareAPI.Services
         /// - A success flag
         /// - Any errors and a custom message
         /// </returns>
-        public Task<Response> ResetSquaresAsync();
+        Task<Response> ResetSquaresAsync();
 
         /// <summary>
         /// Asynchronously deletes the last square from the list.
@@ -48,6 +51,6 @@ namespace SquareAPI.Services
         /// - A success flag
         /// - Any errors and a custom message
         /// </returns>
-        public Task<Response> DeleteLastSquareAsync();
+        Task<Response> DeleteLastSquareAsync();
     }
 }

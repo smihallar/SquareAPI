@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SquareAPI.DTOs;
-using SquareAPI.Models;
 using SquareAPI.Services;
-using System.Net;
 
 namespace SquareAPI.Controllers
 {
@@ -34,44 +31,72 @@ namespace SquareAPI.Controllers
         {
             var response = await squareService.GetAllSquaresAsync();
 
-            switch (response.StatusCode)
+            if (response.IsSuccess)
             {
-                case HttpStatusCode.NotFound:
-                    return NotFound(response);
-                case HttpStatusCode.InternalServerError:
-                    return StatusCode(StatusCodes.Status500InternalServerError, response);
-                default:
-                    return Ok(response.Data);
+                return Ok(response.Data);
             }
-        }
 
-        [HttpDelete]
-        public async Task<ActionResult> DeleteLastSquare()
-        {
-            return Ok();
+            return StatusCode((int)response.StatusCode, response.Message);
         }
 
         /// <summary>
-        /// Adds a new square.
+        /// Deletes the last square added.
         /// </summary>
-        /// <returns>StatusCode OK or error message with appropriate StatusCode</returns>
-        [HttpPost]
+        /// <returns>
+        /// - 204 NoContent if the square was successfully deleted.
+        /// - Appropriate error message with status code if the deletion fails (e.g., 404 Not Found, 500 Internal Server Error).
+        /// </returns>
+        [HttpDelete]
+        public async Task<ActionResult> DeleteLastSquare()
+        {
+            var response = await squareService.DeleteLastSquareAsync();
+            if (response.IsSuccess == true)
+            {
+                return NoContent();
+            }
+
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+
+        /// <summary>
+        /// Resets the squares by clearing the existing squares and creating a new empty list.
+        /// </summary>
+        /// <returns>A status code indicating success (200 OK) or an error (500 Internal Server Error).</returns>
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ResetSquares()
+        {
+            var response = await squareService.ResetSquaresAsync();
+
+            if (response.IsSuccess == true)
+            {
+                return StatusCode(StatusCodes.Status200OK, response.Message);
+            }
+
+            return StatusCode((int)response.StatusCode, response.Message);
+        }
+
+        /// <summary>
+        /// Adds a new square to the system.
+        /// </summary>
+        /// <returns>
+        /// A status code indicating whether the square was successfully added (201 Created) 
+        /// or an error message with an appropriate status code (500 Internal Server Error).
+        /// </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> AddSquare()
         {
             var response = await squareService.AddSquareAsync();
 
-            if (response.StatusCode == HttpStatusCode.Created)
+            if (response.IsSuccess == true)
             {
-                return Ok();
+                return StatusCode(StatusCodes.Status201Created, response.Message);
             }
-            else
-            {
-                return StatusCode((int)response.StatusCode, response.Message);
-            }
+
+            return StatusCode((int)response.StatusCode, response.Message);
         }
-
-
     }
 }

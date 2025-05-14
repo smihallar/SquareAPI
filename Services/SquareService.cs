@@ -9,10 +9,12 @@ namespace SquareAPI.Services
     public class SquareService : ISquareService
     {
         private readonly ISquareRepository repository;
+        private readonly Random random;
 
-        public SquareService(ISquareRepository repository)
+        public SquareService(ISquareRepository repository, Random random)
         {
             this.repository = repository;
+            this.random = random;
         }
 
         /// <inheritdoc/>
@@ -63,7 +65,7 @@ namespace SquareAPI.Services
                 var squares = await repository.GetAllSquaresAsync();
 
                 var squareCount = squares.Count;
-                var lastColorUsed = squares.Count > 0 ? squares.Last().Color : null;
+                var lastColorUsed = squares.Count > 0 ? squares.Last().Color ?? string.Empty : string.Empty;
 
                 var newSquare = GenerateNextSquare(squareCount, lastColorUsed);
                 await repository.AddSquareAsync(newSquare);
@@ -118,7 +120,7 @@ namespace SquareAPI.Services
 
                 await repository.DeleteSquareByPositionAsync(x, y);
 
-                return new Response(HttpStatusCode.OK, "Last square removed successfully");
+                return new Response(HttpStatusCode.NoContent);
             }
             catch (Exception ex)
             {
@@ -172,11 +174,10 @@ namespace SquareAPI.Services
 
         private string GenerateSquareColor(string lastColorUsed)
         {
-            var rnd = new Random();
             string newColor;
             do
             {
-                newColor = String.Format("#{0:X6}", rnd.Next(0x1000000)); // Generate a random color
+                newColor = String.Format("#{0:X6}", random.Next(0x1000000)); // Generate a random color
             } while (lastColorUsed == newColor); // Ensure it's different from the last square's color
 
             return newColor;

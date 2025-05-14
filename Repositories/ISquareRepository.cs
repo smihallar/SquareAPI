@@ -2,6 +2,9 @@
 
 namespace SquareAPI.Repositories
 {
+    /// <summary>
+    /// Interface for the Square repository, defining methods for managing squares in storage.
+    /// </summary>
     public interface ISquareRepository
     {
         /// <summary>

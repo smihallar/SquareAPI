@@ -27,6 +27,7 @@ namespace SquareAPI
             // Register the services and repositories
             builder.Services.AddScoped<ISquareService, SquareService>();
             builder.Services.AddScoped<ISquareRepository, SquareRepository>();
+            builder.Services.AddSingleton<Random>();
 
             var app = builder.Build();
 
