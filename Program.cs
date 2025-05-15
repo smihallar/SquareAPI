@@ -14,6 +14,17 @@ namespace SquareAPI
             // Add services to the container.
             builder.Services.AddControllers();
 
+            // Allow the React frontend to access the API
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:56842")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
@@ -37,9 +48,10 @@ namespace SquareAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-           
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowFrontend");
 
             app.UseAuthorization();
 
