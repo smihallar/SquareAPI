@@ -35,10 +35,13 @@ namespace SquareAPI.Services
                 // Convert the list of squares to a list of SquareDto
                 var squareDtos = squares.Select(s => new SquareDto
                 {
+                    Index = s.Index,
                     X = s.X,
                     Y = s.Y,
                     Color = s.Color
                 }).ToList();
+
+                var sortedSquares = squareDtos.OrderBy(s => s.Index).ToList();
 
                 // Return a successful response with the list of SquareDto
                 return new Response<List<SquareDto>>(HttpStatusCode.OK, "Squares fetched successfully")
@@ -58,7 +61,7 @@ namespace SquareAPI.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Response> AddSquareAsync()
+        public async Task<Response<SquareCreateDTO>> AddSquareAsync()
         {
             try
             {
@@ -70,15 +73,24 @@ namespace SquareAPI.Services
                 var newSquare = GenerateNextSquare(squareCount, lastColorUsed);
                 await repository.AddSquareAsync(newSquare);
 
-                // Return a successful response if the square is added
-                return new Response(HttpStatusCode.Created, "Square added successfully");
+                var dto = new SquareCreateDTO
+                {
+                    X = newSquare.X,
+                    Y = newSquare.Y,
+                    Color = newSquare.Color
+                };
+
+                return new Response<SquareCreateDTO>(HttpStatusCode.Created, "Square added successfully")
+                {
+                    Data = dto,
+                };
             }
             catch (Exception ex)
             {
-                // Return an error response if something goes wrong
-                return new Response(HttpStatusCode.InternalServerError, "Error adding square")
+                return new Response<SquareCreateDTO>(HttpStatusCode.InternalServerError, "Error adding square")
                 {
-                    Errors = new List<string> { ex.Message }
+                    Errors = new List<string> { ex.Message },
+                    Data = null
                 };
             }
         }
@@ -137,7 +149,7 @@ namespace SquareAPI.Services
             var pos = GetPosition(index);
             string newColor = GenerateSquareColor(lastColorUsed);
 
-            return new Square { X = pos.x, Y = pos.y, Color = newColor };
+            return new Square { Index = index, X = pos.x, Y = pos.y, Color = newColor };
         }
 
         /// <summary>

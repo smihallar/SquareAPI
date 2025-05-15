@@ -78,22 +78,21 @@ namespace SquareAPI.Controllers
         }
 
         /// <summary>
-        /// Adds a new square to the system.
+        /// Creates a new square and returns its details.
         /// </summary>
         /// <returns>
-        /// A status code indicating whether the square was successfully added (201 Created) 
-        /// or an error message with an appropriate status code (500 Internal Server Error).
+        /// A <see cref="SquareCreateDTO"/> if successful, or an error message with status code.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> AddSquare()
+        public async Task<ActionResult<SquareCreateDTO>> AddSquare()
         {
             var response = await squareService.AddSquareAsync();
 
             if (response.IsSuccess == true)
             {
-                return StatusCode(StatusCodes.Status201Created, response.Message);
+                return Ok(response.Data);
             }
 
             return StatusCode((int)response.StatusCode, response.Message);
