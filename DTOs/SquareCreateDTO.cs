@@ -1,15 +1,10 @@
-﻿namespace SquareAPI.Models
+﻿namespace SquareAPI.DTOs
 {
     /// <summary>
-    /// A model to represent a square in a grid.
+    /// Represents the data returned after creating a square.
     /// </summary>
-    public class Square
+    public class SquareCreateDTO
     {
-        /// <summary>
-        /// Represents when the square was added, index 0 is the first square.
-        /// </summary>
-        public int Index { get; set; }
-
         /// <summary>
         /// Horizontal grid coordinate of the square.
         /// </summary>

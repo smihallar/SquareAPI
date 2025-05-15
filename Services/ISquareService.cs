@@ -21,15 +21,14 @@ namespace SquareAPI.Services
         Task<Response<List<SquareDto>>> GetAllSquaresAsync();
 
         /// <summary>
-        /// Asynchronously adds a new square to the list.
+        /// Asynchronously adds a new square to the system.
         /// </summary>
         /// <returns>
-        /// A <see cref="Response"/> containing:
-        /// - A status code: 201 (Created) or 500 (Internal Server Error)
-        /// - A success flag
-        /// - Any errors and a custom message
+        /// A <see cref="Response{SquareCreateDTO}"/> object containing the result:
+        /// - HTTP 201 Created with square data on success
+        /// - HTTP 500 Internal Server Error with error details on failure
         /// </returns>
-        Task<Response> AddSquareAsync();
+        Task<Response<SquareCreateDTO>> AddSquareAsync();
 
         /// <summary>
         /// Asynchronously resets the list of squares by clearing existing entries.
