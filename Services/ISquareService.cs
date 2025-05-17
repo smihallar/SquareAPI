@@ -13,8 +13,8 @@ namespace SquareAPI.Services
         /// </summary>
         /// <returns>
         /// A <see cref="Response{T}"/> containing:
-        /// - A list of <see cref="SquareDto"/> or null
-        /// - A status code: 200 (OK), 404 (Not Found), or 500 (Internal Server Error)
+        /// - A list of <see cref="SquareDto"/>
+        /// - A status code: 200 (OK), or 500 (Internal Server Error)
         /// - A success flag
         /// - Any errors and a custom message
         /// </returns>

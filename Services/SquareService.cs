@@ -25,10 +25,10 @@ namespace SquareAPI.Services
                 var squares = await repository.GetAllSquaresAsync();
                 if (squares == null || squares.Count == 0)
                 {
-                    // Return a NotFound with no data if no squares are found
-                    return new Response<List<SquareDto>>(HttpStatusCode.NotFound, "No squares found")
+                    // Return an OK with an empty list if no squares are found
+                    return new Response<List<SquareDto>>(HttpStatusCode.OK, "No squares added yet")
                     {
-                        Data = null
+                        Data = new List<SquareDto>()
                     };
                 }
 
