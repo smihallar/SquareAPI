@@ -54,4 +54,7 @@ A simple ASP.NET Core Web API for managing colored squares on a grid. Squares ar
 ## Data Persistence
 
 Squares are stored in a local `squares.json` file in the project directory. The repository layer handles all file operations with error handling.
+
+## Created by
+Smilla Hallgren Larsson
    
