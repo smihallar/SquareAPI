@@ -20,12 +20,11 @@ namespace SquareAPI.Controllers
         /// </summary>
         /// <returns>
         /// A list of <see cref="SquareDto"/> representing all added squares. 
-        /// If no squares are found, a 404 Not Found response is returned.
+        /// If no squares are found, an empty list is returned.
         /// If an internal error occurs, a 500 Internal Server Error response is returned.
         /// </returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<SquareDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<SquareDto>>> GetAllSquares()
         {
